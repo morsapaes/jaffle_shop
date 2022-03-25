@@ -7,9 +7,6 @@ profile: 'jaffle_shop'
 
 model-paths: ["models"]
 seed-paths: ["seeds"]
-test-paths: ["tests"]
-analysis-paths: ["analysis"]
-macro-paths: ["macros"]
 
 target-path: "target"
 clean-targets:
@@ -17,10 +14,13 @@ clean-targets:
     - "dbt_modules"
     - "logs"
 
-require-dbt-version: [">=1.0.0", "<2.0.0"]
-
 models:
   jaffle_shop:
-      materialized: table
-      staging:
-        materialized: view
+    marts:
+      core:
+        materialized: materializedview
+        intermediate:
+          materialized: view
+    staging:
+      materialized: view
+      tags: ['staging', 'hourly']

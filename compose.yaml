@@ -1,0 +1,19 @@
+services:
+  materialized:
+    image: materialize/materialized:v0.24.0
+    container_name: materialized
+    init: true
+    command: -w1
+    ports:
+      - 6875:6875
+    volumes: [./seeds:/tmp/seeds]
+    healthcheck: {test: curl -f localhost:6875, interval: 1s, start_period: 30s}
+  mzcli:
+    image: materialize/cli:v0.24.0
+    container_name: mzcli
+  setup:
+    image: materialize/cli:v0.24.0
+    command: -f /mnt/setup.sql
+    volumes: [.:/mnt]
+    depends_on:
+      materialized: {condition: service_healthy}
